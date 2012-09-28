@@ -108,9 +108,9 @@
 #endif
                 NSString *filePath = [path stringByAppendingPathComponent:name]; // Create a full path from the name
                 
-                unsigned long long size = [NSFileManager sizeForObject:object atOffset:location];
+                unsigned long long fileSize = [NSFileManager sizeForObject:object atOffset:location];
                 
-                if (size == 0){
+                if (fileSize == 0){
 #ifdef TAR_VERBOSE_LOG_MODE
                     NSLog(@"UNTAR - empty_file - %@", filePath);
 #endif
@@ -118,7 +118,7 @@
                     break;
                 }
                 
-                blockCount += (size-1)/TAR_BLOCK_SIZE+1; // size/TAR_BLOCK_SIZE rounded up
+                blockCount += (fileSize-1)/TAR_BLOCK_SIZE+1; // size/TAR_BLOCK_SIZE rounded up
                 
                 // [self writeFileDataForObject:object inRange:NSMakeRange(location+TAR_BLOCK_SIZE, size) atPath:filePath]; 
                 [self writeFileDataForObject:object atLocation:(location+TAR_BLOCK_SIZE) withLength:size atPath:filePath];
@@ -153,8 +153,8 @@
 #ifdef TAR_VERBOSE_LOG_MODE
                 NSLog(@"UNTAR - unsupported block"); 
 #endif
-                unsigned long long size = [NSFileManager sizeForObject:object atOffset:location];
-                blockCount += ceil(size/TAR_BLOCK_SIZE);
+                unsigned long long thingSize = [NSFileManager sizeForObject:object atOffset:location];
+                blockCount += ceil(thingSize/TAR_BLOCK_SIZE);
                 break;
             }          
             default: // It's not a tar type
